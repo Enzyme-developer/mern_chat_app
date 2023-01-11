@@ -1,13 +1,8 @@
 class customError extends Error {
-  statusCode: number;
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
+  constructor(message: string) {
+    super(message)
   }
 }
 
-const createCutsomError = (statusCode, message) => {
-  return new customError(statusCode, message);
-};
-
-module.exports = { customError, createCutsomError };
+export {};
+module.exports = customError
