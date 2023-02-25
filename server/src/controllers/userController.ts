@@ -63,7 +63,17 @@ const registerUser = async (
   }
 };
 
-const loginUser = () => {};
+const loginUser = async (req: { body: { email: string; password: string; }; }, res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: any): void; new(): any; }; }; }) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (email && passwordMatch) {
+    res.status(201).send(user);
+  } else {
+    throw new unauthorized("unauthorized user");
+  }
+};
 
 export {};
 module.exports = { registerUser, loginUser };
