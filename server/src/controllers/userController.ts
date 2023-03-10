@@ -4,6 +4,7 @@ const badRequest = require("../errors/badRequest");
 const unauthorized = require("../errors/unauthorized");
 const generateToken = require("../config/generateToken");
 
+//register
 export const registerUser = async (
   req: {
     body: { name: string; email: string; password: string; picture: string };
@@ -66,28 +67,30 @@ export const registerUser = async (
   }
 };
 
+//login
 export const loginUser = async (
   req: { body: { email: string; password: string } },
-  res: {
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: { (arg0: any): void; new (): any };
-    };
-  }
-) => {
+  res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: { id: string; name: string; email: string; password: string; picture: string; token: string; }): void; new(): any; }; }; }) => {
   const { email, password } = req.body;
-
-  const user = await User.findOne({ email });
-  const passwordMatch = await bcrypt.compare(password, user.password);
-  if (email && passwordMatch) {
-    const token = await generateToken(user._id)
-    res.status(201).send(user);
-  } else {
-    throw new unauthorized("unauthorized user");
+  try {
+    const user = await User.findOne({ email });
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (email && passwordMatch) {
+      res.status(201).send({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        picture: user.picture,
+        token: await generateToken(user._id)
+      });
+    } else {
+      throw new unauthorized("unauthorized user");
+    }
+  } catch (error) {
+    console.log(error)
   }
 };
-
 
 //api/user?search=enzyme
 export const getAllUsers = async (
