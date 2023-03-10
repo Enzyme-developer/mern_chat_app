@@ -25,15 +25,13 @@ const Signup = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [picture, setPicture] = useState<string>("");
+  // const [pic, setPic] = useState<any>("");
   const [picturePreview, setPicturePreview] = useState<string | null>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleImage = (e: any) => {
-    setPicturePreview(URL.createObjectURL(e.target.files[0]));
-  };
-
   const uploadImage = async (pic: any) => {
     setLoading(true);
+    setPicturePreview(URL.createObjectURL(pic));
     if (pic === undefined) {
       toast({
         title: "Please Select An Image!",
@@ -45,7 +43,6 @@ const Signup = () => {
       return;
     }
     console.log(pic);
-
     if (
       pic.type === "image/jpeg" ||
       pic.type === "image/jpeg" ||
@@ -54,15 +51,15 @@ const Signup = () => {
       try {
         const data = new FormData();
         data.append("file", pic);
-        data.append("cloud_name", "chatapp");
+        data.append("cloud_name", "dfxhl39tg");
         data.append("upload_preset", "chatapp");
-        const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/cjhatapp/image/upload",
-          data
-        );
-        const imageData = response.data;
-        setPicture(imageData.url.toString());
-        console.log(imageData.url.toString());
+        // const response = await axios.post(
+        //   "https://api.cloudinary.com/v1_1/dfxhl39tg/image/upload",
+        //   data
+        // );
+        // const imageData = response.data;
+        // setPicture(imageData.url.toString());
+        // console.log(imageData.url.toString());
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -84,7 +81,7 @@ const Signup = () => {
   const handleSignup = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    e.target.files != null ? uploadImage(e.target.files[0]) : null;
+    setPicturePreview(null);
     if (!name || !email || !password || !confirmPassword) {
       toast({
         title: "All fields are required",
@@ -93,7 +90,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false);
+      setLoading(false)
       return;
     }
 
@@ -105,19 +102,18 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setLoading(false)
       return;
     }
-
     console.log(name, email, password, picture);
-
     try {
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
-      const { data } = await axios.post(
-        "/api/user",
+      const response = await axios.post(
+        "http://localhost:5000/api/user/register",
         {
           name,
           email,
@@ -126,6 +122,7 @@ const Signup = () => {
         },
         config
       );
+      const data = response.data
       console.log(data);
 
       toast({
@@ -137,13 +134,13 @@ const Signup = () => {
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-      setLoading(false);
       router.push("/chats");
+      setLoading(false);
     } catch (error: any) {
-      console.log(error);
+      console.log(error?.response);
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        description: error?.response?.data?.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -151,6 +148,7 @@ const Signup = () => {
       });
       setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
@@ -215,20 +213,24 @@ const Signup = () => {
           p="1"
           type="file"
           placeholder="choose a picture"
-          onChange={handleImage}
+          onChange={(e: any) => uploadImage(e.target.files[0])}
         />
       </FormControl>
 
       <Box>
-        {picturePreview && <Image alt="preview" src={picturePreview} width='300' height='300' />}
+        {picturePreview && (
+          <Image alt="preview" src={picturePreview} width="300" height="300" />
+        )}
       </Box>
       <Box>
         <Button
-          bg="blue.500"
+          colorScheme="blue"
           w="100%"
           my="4"
           color="white"
           onClick={handleSignup}
+          isLoading={loading}
+          loadingText="Signing up"
         >
           Sign up
         </Button>

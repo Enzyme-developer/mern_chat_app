@@ -4,8 +4,10 @@ const badRequest = require("../errors/badRequest");
 const unauthorized = require("../errors/unauthorized");
 const generateToken = require("../config/generateToken");
 
-const registerUser = async (
-  req: { body: { name: string; email: string; password: string; pic: string } },
+export const registerUser = async (
+  req: {
+    body: { name: string; email: string; password: string; picture: string };
+  },
   res: {
     status: (arg0: number) => {
       (): string;
@@ -24,7 +26,7 @@ const registerUser = async (
   }
 ) => {
   try {
-    const { name, email, password, pic } = req.body;
+    const { name, email, password, picture } = req.body;
 
     if (!name || !email || !password) {
       res.status(400);
@@ -41,7 +43,7 @@ const registerUser = async (
         name,
         email,
         password: hashedPassword,
-        pic,
+        picture,
       });
 
       if (user) {
@@ -50,8 +52,9 @@ const registerUser = async (
           name: user.name,
           email: user.email,
           password: user.password,
-          token: generateToken(user._id),
+          token: await generateToken(user._id),
         });
+        console.log(user);
       } else {
         throw new badRequest("wrong credentials.");
       }
@@ -63,17 +66,45 @@ const registerUser = async (
   }
 };
 
-const loginUser = async (req: { body: { email: string; password: string; }; }, res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: any): void; new(): any; }; }; }) => {
+export const loginUser = async (
+  req: { body: { email: string; password: string } },
+  res: {
+    status: (arg0: number) => {
+      (): any;
+      new (): any;
+      send: { (arg0: any): void; new (): any };
+    };
+  }
+) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (email && passwordMatch) {
+    const token = await generateToken(user._id)
     res.status(201).send(user);
   } else {
     throw new unauthorized("unauthorized user");
   }
 };
 
-export {};
-module.exports = { registerUser, loginUser };
+
+//api/user?search=enzyme
+export const getAllUsers = async (
+  req: { query: string; user: { _id: string } },
+  res: { send: (arg0: any) => void }
+) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  res.send(users);
+};
+
+
+module.exports = { registerUser, loginUser, getAllUsers };
