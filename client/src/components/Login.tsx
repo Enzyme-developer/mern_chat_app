@@ -44,7 +44,7 @@ const Login = () => {
         },
       };
       const { data } = await axios.post(
-        "/api/user",
+        "http://localhost:5000/api/user/login",
         {
           email,
           password,
@@ -68,7 +68,7 @@ const Login = () => {
       console.log(error);
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        description: error?.response?.data?.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -116,10 +116,14 @@ const Login = () => {
       </Box>
       <Box>
         <Button
-          bg="blue.500"
+          colorScheme="blue"
           w="100%"
           my="4"
           color="white"
+          isLoading={loading}
+          isDisabled={loading}
+          isActive={!loading}
+          loadingText="Logging you in!"
           onClick={handleSubmit}
         >
           Submit

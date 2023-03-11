@@ -13,16 +13,16 @@ connectDb();
 
 app.use(cors())
 app.use(express.json());
-app.use(express.urlencoded({ extented: true }));
+app.use(express.urlencoded({ extented: true }))
 
-app.use("/api/user", userRoutes);
-app.use("/api/chat", chatRoutes);
+app.use("/api/user", userRoutes)
+app.use("/api/chat", chatRoutes)
 app.use(notFound)
 app.use(errorHandler)
 
 app.get("/", (req: any, res: { send: (arg0: string) => void }) => {
   res.send("Hello world");
-});
+})
 
 app.listen(port, () => {
   console.log(`server is listening on port ${port}`);

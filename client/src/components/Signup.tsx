@@ -123,7 +123,7 @@ const Signup = () => {
         config
       );
       const data = response.data
-      console.log(data);
+      console.log(response);
 
       toast({
         title: "Registration Successful",
@@ -137,7 +137,7 @@ const Signup = () => {
       router.push("/chats");
       setLoading(false);
     } catch (error: any) {
-      console.log(error?.response);
+      console.log(error);
       toast({
         title: "Error Occured!",
         description: error?.response?.data?.message,
@@ -230,6 +230,8 @@ const Signup = () => {
           color="white"
           onClick={handleSignup}
           isLoading={loading}
+          isDisabled={loading}
+          isActive={!loading}
           loadingText="Signing up"
         >
           Sign up

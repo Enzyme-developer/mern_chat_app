@@ -57,10 +57,10 @@ export const registerUser = async (
         });
         console.log(user);
       } else {
-        throw new badRequest("wrong credentials.");
+        throw new badRequest("something went wrong");
       }
     } else {
-      throw new unauthorized("unauthorized user");
+      throw new unauthorized("user already exists");
     }
   } catch (error) {
     console.log(error);
@@ -73,7 +73,7 @@ export const loginUser = async (
   res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: { id: string; name: string; email: string; password: string; picture: string; token: string; }): void; new(): any; }; }; }) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (email && passwordMatch) {
       res.status(201).send({

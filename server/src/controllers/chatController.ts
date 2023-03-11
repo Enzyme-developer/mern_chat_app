@@ -18,30 +18,34 @@ const fetchChat = async (
 ) => {
   const { userId } = req.body;
 
+  //check if userId is passed
   if (!userId) {
-    console.log("UserId param not sent with request");
+    console.log("UserId is required");
     return res.sendStatus(400);
   }
 
+  //find chat that contains both ids as users
   let isChat = await Chat.find({
     isGroupChat: false,
     $and: [
       { users: { $elemMatch: { $eq: req.user._id } } },
       { users: { $elemMatch: { $eq: userId } } },
     ],
-  })
+  }) //populate the users and latestMessage of the chat schema so they can have full detail
     .populate("users", "-password")
     .populate("latestMessage");
 
+  //The chat now has a latestMessage field that has been populated but the sender is still an Id; The path is populated with the User model
   isChat = await User.populate(isChat, {
     path: "latestMessage.sender",
     select: "name pic email",
   });
 
+  //if that chat is available proceed, else create a new one
   if (isChat.length > 0) {
     res.send(isChat[0]);
   } else {
-    var chatData = {
+    let chatData = {
       chatName: "sender",
       isGroupChat: false,
       users: [req.user._id, userId],
@@ -56,7 +60,7 @@ const fetchChat = async (
       res.status(200).json(FullChat);
     } catch (error) {
       res.status(400);
-      throw new badRequest(error.message);
+      throw new badRequest("unable to  fetch chat");
     }
   }
 };
@@ -85,7 +89,7 @@ const fetchAllChats = async (
         });
         res.status(200).send(results);
       });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400);
     throw new badRequest(error.message);
   }
@@ -128,7 +132,7 @@ const createGroupChat = async (
       .populate("groupAdmin", "-password");
 
     res.status(200).json(fullGroupChat);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400);
     throw new badRequest(error.message);
   }
@@ -140,24 +144,23 @@ const renameGroup = async (
   res: { status: (arg0: number) => void; json: (arg0: any) => void }
 ) => {
   const { chatId, chatName } = req.body;
-
-  const updatedChat = await Chat.findByIdAndUpdate(
-    chatId,
-    {
-      chatName: chatName,
-    },
-    {
-      new: true,
-    }
-  )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
-
-  if (!updatedChat) {
-    res.status(404);
-    throw new badRequest("chat not found");
-  } else {
+  try {
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        chatName: chatName,
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
     res.json(updatedChat);
+  } catch (error: any) {
+    console.log(error);
+    res.status(400);
+    throw new badRequest("chat not updated");
   }
 };
 
@@ -168,24 +171,22 @@ const removeFromGroup = async (
 ) => {
   const { chatId, userId } = req.body;
   // check if the requester is admin
-
-  const removed = await Chat.findByIdAndUpdate(
-    chatId,
-    {
-      $pull: { users: userId },
-    },
-    {
-      new: true,
-    }
-  )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
-
-  if (!removed) {
-    res.status(404);
-    throw new badRequest("chat not found");
-  } else {
+  try {
+    const removed = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        $pull: { users: userId },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
     res.json(removed);
+  } catch (error: any) {
+    console.log(error);
+    throw new badRequest("user could not be removed");
   }
 };
 
@@ -195,26 +196,23 @@ const addToGroup = async (
   res: { status: (arg0: number) => void; json: (arg0: any) => void }
 ) => {
   const { chatId, userId } = req.body;
-
   // check if the requester is admin
-
-  const added = await Chat.findByIdAndUpdate(
-    chatId,
-    {
-      $push: { users: userId },
-    },
-    {
-      new: true,
-    }
-  )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
-
-  if (!added) {
-    res.status(404);
-    throw new badRequest("chat not found");
-  } else {
+  try {
+    const added = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        $push: { users: userId },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
     res.json(added);
+  } catch (error: any) {
+    console.log(error);
+    throw new badRequest("user could not be added");
   }
 };
 
