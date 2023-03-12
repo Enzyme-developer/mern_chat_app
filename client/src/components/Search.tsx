@@ -11,10 +11,16 @@ import {
 } from "@chakra-ui/react";
 import { ChatContext, ChatState } from "../context/chatContext";
 import ProfileModal from "./ProfileModal";
+import { useRouter } from "next/router";
 
-const Search = () => {
-    const { user } = useContext(ChatContext)
-  console.log(user);
+const Search = ({onOpen}: any) => {
+  const router = useRouter();
+    const { user } = useContext(ChatContext);
+    
+  const logoutHandler = () => {
+    localStorage.removeItem("uesrInfo");
+    router.push("/");
+  };
 
   return (
     <Box
@@ -33,7 +39,7 @@ const Search = () => {
         arrowSize={15}
         placement="auto"
       >
-        <Button variant="ghost">
+        <Button variant="ghost" onClick={onOpen}>
           <SearchIcon mr="2" />
           <Text display={{ base: "none", md: "flex" }}>Search user</Text>
         </Button>
@@ -66,11 +72,12 @@ const Search = () => {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>My Profile</MenuItem>
+                <ProfileModal user={user}>
+                  <MenuItem>My Profile</MenuItem>
+                </ProfileModal>
                 <MenuDivider />
-                {/* <MenuItem onClick={() => setUser(null)}>Logout</MenuItem> */}
+                <MenuItem onClick={logoutHandler}>Logout</MenuItem>
               </MenuList>
-              <ProfileModal user={user} />
             </>
           )}
         </Menu>

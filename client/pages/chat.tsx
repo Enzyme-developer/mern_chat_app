@@ -1,14 +1,15 @@
 import { Box } from "@chakra-ui/react";
-import React from "react";
 import Search from "../src/components/Search";
+import Sidebar from "../src/components/Sidebar";
 import { ChatState } from "../src/context/chatContext";
 
 const chat = () => {
-//   const { user, setUser } = ChatState;
+  const { user, setUser } = ChatState;
 
   return (
-    <Box bg="green.600">
-      <Search />
+    <Box bg="green.600" w='100%' h='100vh'>
+      {/* <Search /> */}
+      <Sidebar />
     </Box>
   );
 };
