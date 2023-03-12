@@ -134,7 +134,7 @@ const Signup = () => {
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-      router.push("/chats");
+      router.push("/chat");
       setLoading(false);
     } catch (error: any) {
       console.log(error);

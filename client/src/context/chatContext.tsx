@@ -1,23 +1,27 @@
 import { Router, useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const initialState = {}
+type ChatContextType = {
+  user: any
+ setUser: React.Dispatch<React.SetStateAction<{}>>
+}
 
-export const ChatContext = createContext(initialState);
+export const ChatContext = createContext<ChatContextType>({} as ChatContextType);
 
 const ChatProvider = ({ children }: any) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState({});
+  console.log(user)
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo") || '{}');
     setUser(userInfo)
+    console.log(user)
 
     if (!userInfo) {
       router.push("/");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
+  }, [router.events, router]);
 
   return (
     <ChatContext.Provider value={{ user, setUser }}>

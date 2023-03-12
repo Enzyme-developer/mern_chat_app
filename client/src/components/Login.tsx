@@ -63,7 +63,7 @@ const Login = () => {
 
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      router.push("/chats");
+      router.push("/chat");
     } catch (error: any) {
       console.log(error);
       toast({

@@ -1,17 +1,21 @@
-import React from "react";
-import { Box, Button, Text, Tooltip } from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { Avatar, Box, Button, Text, Tooltip } from "@chakra-ui/react";
+import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
+
 import {
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
   MenuDivider,
 } from "@chakra-ui/react";
+import { ChatContext, ChatState } from "../context/chatContext";
+import ProfileModal from "./ProfileModal";
 
 const Search = () => {
+    const { user } = useContext(ChatContext)
+  console.log(user);
+
   return (
     <Box
       display="flex"
@@ -21,6 +25,7 @@ const Search = () => {
       w="100%"
       p="5px 10px"
       borderWidth="5px"
+      h="fit-content"
     >
       <Tooltip
         hasArrow
@@ -29,6 +34,7 @@ const Search = () => {
         placement="auto"
       >
         <Button variant="ghost">
+          <SearchIcon mr="2" />
           <Text display={{ base: "none", md: "flex" }}>Search user</Text>
         </Button>
       </Tooltip>
@@ -39,21 +45,32 @@ const Search = () => {
 
       <div>
         <Menu>
+          <MenuButton>
+            <BellIcon fontSize="2xl" m="1" />
+          </MenuButton>
+          {/* <MenuList></MenuList> */}
+        </Menu>
+        <Menu>
           {({ isOpen }) => (
             <>
               <MenuButton
                 isActive={isOpen}
                 as={Button}
-                rightIcon={<BellIcon />}
+                rightIcon={<ChevronDownIcon />}
               >
-                {isOpen ? "Close" : "Open"}
+                <Avatar
+                  size="sm"
+                  cursor="pointer"
+                  name={user?.name}
+                  src={user?.pic}
+                />
               </MenuButton>
               <MenuList>
-                <MenuItem>Download</MenuItem>
-                <MenuItem onClick={() => alert("Kagebunshin")}>
-                  Create a Copy
-                </MenuItem>
+                <MenuItem>My Profile</MenuItem>
+                <MenuDivider />
+                {/* <MenuItem onClick={() => setUser(null)}>Logout</MenuItem> */}
               </MenuList>
+              <ProfileModal user={user} />
             </>
           )}
         </Menu>
