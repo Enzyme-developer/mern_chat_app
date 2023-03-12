@@ -3,8 +3,7 @@ import { Box, Text } from "@chakra-ui/layout";
 import { useContext } from "react";
 import { ChatContext } from "../context/chatContext";
 
-const UserListItem = ({ handleFunction }: any) => {
-    const { user } = useContext(ChatContext);
+const UserListItem = ({ handleFunction, user }: any) => {
 
   return (
     <Box

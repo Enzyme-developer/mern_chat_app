@@ -44,11 +44,6 @@ const Sidebar = () => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const logoutHandler = () => {
-    localStorage.removeItem("userInfo");
-    router.push("/");
-  };
-
   const handleSearch = async () => {
     if (!search) {
       toast({
@@ -103,13 +98,15 @@ const Sidebar = () => {
         config
       );
 
-      if (!chats.find((c: any) => c._id === data._id)) {
+      if (!chats?.find((c: any) => c?._id === data?._id)) {
         setChats([data, ...chats]);
       }
+      console.log(data);
       setSelectedChat(data);
       setLoadingChat(false);
       onClose();
     } catch (error: any) {
+      setLoadingChat(false);
       console.log(error);
       toast({
         title: "Error fetching the chat",
@@ -142,14 +139,16 @@ const Sidebar = () => {
             </Box>
             {loading ? (
               <ChatLoading />
-            ) : (
-              searchResult?.map((user: any) => (
+            ) : searchResult ? (
+              searchResult.map((user: any) => (
                 <UserListItem
                   key={user._id}
                   user={user}
                   handleFunction={() => accessChat(user._id)}
                 />
               ))
+            ) : (
+              <p>No Chat Found</p>
             )}
             {loadingChat && <Spinner ml="auto" display="flex" />}
           </DrawerBody>
