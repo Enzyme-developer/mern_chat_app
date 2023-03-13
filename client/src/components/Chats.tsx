@@ -9,7 +9,7 @@ import ChatLoading from "./ChatLoader";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../context/chatContext";
 
-const MyChats = ({ fetchAgain }: any) => {
+const Chats = ({ fetchAgain }: any) => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   console.log(chats);
@@ -127,4 +127,4 @@ const MyChats = ({ fetchAgain }: any) => {
   );
 };
 
-export default MyChats;
+export default Chats;

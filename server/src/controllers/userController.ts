@@ -1,3 +1,5 @@
+import { json } from "stream/consumers";
+
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const badRequest = require("../errors/badRequest");
@@ -70,27 +72,34 @@ export const registerUser = async (
 //login
 export const loginUser = async (
   req: { body: { email: string; password: string } },
-  res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: { id: string; name: string; email: string; password: string; picture: string; token: string; }): void; new(): any; }; }; }) => {
+  res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: { id?: any; name?: any; email?: any; password?: any; picture?: any; token?: any; message?: string; }): void; new(): any; }; }; }
+) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email })
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (email && passwordMatch) {
+    const user = await User.findOne({ email });
+    if (user) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (passwordMatch) {
       res.status(201).send({
         id: user._id,
         name: user.name,
         email: user.email,
         password: user.password,
         picture: user.picture,
-        token: await generateToken(user._id)
+        token: await generateToken(user._id),
       });
+      } else {
+        res.status(401).send({message: 'wrong credentials'})
+        throw new unauthorized("wrong credentials");
+    }
     } else {
-      throw new unauthorized("unauthorized user");
+      throw new unauthorized("User not found");
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
+
 
 //api/user?search=enzyme
 export const getAllUsers = async (
@@ -108,6 +117,5 @@ export const getAllUsers = async (
   const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
   res.send(users);
 };
-
 
 module.exports = { registerUser, loginUser, getAllUsers };

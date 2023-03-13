@@ -4,7 +4,7 @@ import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import Header from "../src/components/Header";
 import { Container } from "@chakra-ui/react";
-import AuthTabs from "../src/components/AuthTab";
+import AuthTabs from "../src/components/authentication/AuthTab";
 // import background from "../src/assets/background.jpg";
 
 const inter = Inter({ subsets: ["latin"] });

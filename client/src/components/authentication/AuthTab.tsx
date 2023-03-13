@@ -5,7 +5,13 @@ import Signup from "./Signup";
 
 const AuthTab = () => {
   return (
-    <Tabs variant="soft-rounded" colorScheme="green" bg='white' p='4' borderRadius='10'>
+    <Tabs
+      variant="soft-rounded"
+      colorScheme="green"
+      bg="white"
+      p="4"
+      borderRadius="10"
+    >
       <TabList>
         <Tab w="50%">Login</Tab>
         <Tab w="50%">Sign up</Tab>

@@ -33,7 +33,7 @@ import { ChatState } from "../context/chatContext";
 import { useRouter } from "next/router";
 import Search from "./Search";
 
-const Sidebar = () => {
+const Bar = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -157,4 +157,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default Bar;
