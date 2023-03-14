@@ -72,26 +72,38 @@ export const registerUser = async (
 //login
 export const loginUser = async (
   req: { body: { email: string; password: string } },
-  res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: { id?: any; name?: any; email?: any; password?: any; picture?: any; token?: any; message?: string; }): void; new(): any; }; }; }
+  res: {
+    status: (arg0: number) => {
+      (): any;
+      new (): any;
+      send: {
+        (arg0: {
+          id: string;
+          name: string;
+          email: string;
+          picture: string;
+          token: string;
+        }): void;
+        new (): any;
+      };
+      json: { (arg0: { message: string }): any; new (): any };
+    };
+  }
 ) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
     if (user) {
       const passwordMatch = await bcrypt.compare(password, user.password);
-      if (passwordMatch) {
-      res.status(201).send({
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        picture: user.picture,
-        token: await generateToken(user._id),
-      });
-      } else {
-        res.status(401).send({message: 'wrong credentials'})
-        throw new unauthorized("wrong credentials");
-    }
+      passwordMatch
+        ? res.status(201).send({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            picture: user.picture,
+            token: await generateToken(user._id),
+          })
+        : res.status(401).json({ message: "wrong credentials" });
     } else {
       throw new unauthorized("User not found");
     }
@@ -99,7 +111,6 @@ export const loginUser = async (
     console.log(error);
   }
 };
-
 
 //api/user?search=enzyme
 export const getAllUsers = async (

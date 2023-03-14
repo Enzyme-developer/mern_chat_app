@@ -1,5 +1,5 @@
-const notfound = (req: any, res: { status: (arg0: number) => { (): any; new(): any; send: { (arg0: string): void; new(): any } } }) => {
-    res.status(404).send('Page does not Exist')
+const notfound = (req: any, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string }): void; new(): any } } }) => {
+    res.status(404).json({ message: 'Page does not Exist' })
 }
 
 module.exports = notfound 
