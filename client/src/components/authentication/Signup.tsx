@@ -25,7 +25,6 @@ const Signup = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [picture, setPicture] = useState<string>("");
-  // const [pic, setPic] = useState<any>("");
   const [picturePreview, setPicturePreview] = useState<string | null>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -44,7 +43,7 @@ const Signup = () => {
     }
     console.log(pic);
     if (
-      pic.type === "image/jpeg" ||
+      pic.type === "image/jpg" ||
       pic.type === "image/jpeg" ||
       pic.type === "image/png"
     ) {
@@ -53,13 +52,13 @@ const Signup = () => {
         data.append("file", pic);
         data.append("cloud_name", "dfxhl39tg");
         data.append("upload_preset", "chatapp");
-        // const response = await axios.post(
-        //   "https://api.cloudinary.com/v1_1/dfxhl39tg/image/upload",
-        //   data
-        // );
-        // const imageData = response.data;
-        // setPicture(imageData.url.toString());
-        // console.log(imageData.url.toString());
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/dfxhl39tg/image/upload",
+          data
+        );
+        const imageData = response.data;
+        setPicture(imageData.url.toString());
+        console.log(imageData.url.toString());
         setLoading(false);
       } catch (err) {
         console.log(err);

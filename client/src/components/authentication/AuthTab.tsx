@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box } from "@chakra-ui/react";
 import React from "react";
 import Login from "./Login";
 import Signup from "./Signup";
@@ -6,8 +6,8 @@ import Signup from "./Signup";
 const AuthTab = () => {
   return (
     <Tabs
-      variant="soft-rounded"
-      colorScheme="green"
+      variant="solid-rounded"
+      colorScheme="blue"
       bg="white"
       p="4"
       borderRadius="10"

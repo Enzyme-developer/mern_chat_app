@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Header from "../src/components/Header";
 import { Container } from "@chakra-ui/react";
 import AuthTabs from "../src/components/authentication/AuthTab";
-// import background from "../src/assets/background.jpg";
+import background from "../src/assets/chat.png";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,13 +13,12 @@ export default function Home() {
   return (
     <div
       style={{
-        // backgroundImage: `url(${background.src})`,
+        backgroundImage: `url(${background.src})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         minHeight: "100vh",
-        maxWidth: "100vw",
+        width: "100vw",
         padding: "20px 0",
-        backgroundColor: "red",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

@@ -1,5 +1,3 @@
-import { json } from "stream/consumers";
-
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const badRequest = require("../errors/badRequest");
@@ -13,18 +11,20 @@ export const registerUser = async (
   },
   res: {
     status: (arg0: number) => {
-      (): string;
-      new (): string;
+      (): any;
+      new (): any;
       send: {
         (arg0: {
           id: string;
           name: string;
           email: string;
           password: string;
+          picture: string;
           token: string;
         }): void;
-        new (): string;
+        new (): any;
       };
+      json: { (arg0: { message: string }): void; new (): any };
     };
   }
 ) => {
@@ -55,10 +55,12 @@ export const registerUser = async (
           name: user.name,
           email: user.email,
           password: user.password,
+          picture: user.picture,
           token: await generateToken(user._id),
         });
         console.log(user);
       } else {
+        res.status(400).json({ message: "something went wrong" });
         throw new badRequest("something went wrong");
       }
     } else {
@@ -68,6 +70,7 @@ export const registerUser = async (
     console.log(error);
   }
 };
+
 
 //login
 export const loginUser = async (
@@ -111,6 +114,7 @@ export const loginUser = async (
     console.log(error);
   }
 };
+
 
 //api/user?search=enzyme
 export const getAllUsers = async (

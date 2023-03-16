@@ -13,10 +13,10 @@ import { ChatContext, ChatState } from "../context/chatContext";
 import ProfileModal from "./ProfileModal";
 import { useRouter } from "next/router";
 
-const Search = ({onOpen}: any) => {
+const Search = ({ onOpen }: any) => {
   const router = useRouter();
-    const { user } = useContext(ChatContext);
-    
+  const { user } = useContext(ChatContext);
+
   const logoutHandler = () => {
     localStorage.removeItem("uesrInfo");
     router.push("/");
@@ -68,7 +68,7 @@ const Search = ({onOpen}: any) => {
                   size="sm"
                   cursor="pointer"
                   name={user?.name}
-                  src={user?.pic}
+                  src={user?.picture}
                 />
               </MenuButton>
               <MenuList>
