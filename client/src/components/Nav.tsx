@@ -12,8 +12,16 @@ import {
 import { ChatContext, ChatState } from "../context/chatContext";
 import ProfileModal from "./ProfileModal";
 import { useRouter } from "next/router";
+// import NotificationBadge from "react-notification-badge";
+// import { Effect } from "react-notification-badge";
 
-const Search = ({ onOpen }: any) => {
+type disclosureProps = {
+  onOpen?: () => void;
+  isOpen?: boolean;
+  onClose?: () => void
+}
+
+const Nav = ({ onOpen }: disclosureProps) => {
   const router = useRouter();
   const { user } = useContext(ChatContext);
 
@@ -37,7 +45,7 @@ const Search = ({ onOpen }: any) => {
         hasArrow
         label="Search for users"
         arrowSize={15}
-        placement="auto"
+        placement="bottom"
       >
         <Button variant="ghost" onClick={onOpen}>
           <SearchIcon mr="2" />
@@ -54,7 +62,6 @@ const Search = ({ onOpen }: any) => {
           <MenuButton>
             <BellIcon fontSize="2xl" m="1" />
           </MenuButton>
-          {/* <MenuList></MenuList> */}
         </Menu>
         <Menu>
           {({ isOpen }) => (
@@ -86,4 +93,4 @@ const Search = ({ onOpen }: any) => {
   );
 };
 
-export default Search;
+export default Nav;

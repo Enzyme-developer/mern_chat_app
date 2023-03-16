@@ -30,7 +30,7 @@ const ProfileModal = ({ user, children }: any) => {
           aria-label="button"
         />
       )}
-      <Modal size="md" onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal size={{ base: "sm", md: "md" }} onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent h="400px">
           <ModalHeader fontSize="30px" display="flex" justifyContent="center">
@@ -46,8 +46,6 @@ const ProfileModal = ({ user, children }: any) => {
             <Image
               borderRadius="full"
               boxSize="150px"
-              borderColor='papayawhip'
-              bg='green'
               objectFit='cover'
               src={user?.picture}
               alt={user?.name}
