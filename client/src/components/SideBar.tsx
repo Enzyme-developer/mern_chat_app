@@ -11,9 +11,9 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/toast";
-import ChatLoading from "./ChatLoader";
+import ChatLoading from "./reusables/ChatLoader";
 import { Spinner } from "@chakra-ui/spinner";
-import UserListItem from "./UserListItem";
+import UserListItem from "./reusables/UserListItem";
 import { ChatState } from "../context/chatContext";
 
 type disclosureProps = {
@@ -122,16 +122,14 @@ const SideBar = ({ isOpen, onClose }: disclosureProps) => {
           </Box>
           {loading ? (
             <ChatLoading />
-          ) : searchResult ? (
-            searchResult.map((user: any) => (
+          ) : (
+            searchResult?.map((user: any) => (
               <UserListItem
                 key={user._id}
                 user={user}
                 handleFunction={() => accessChat(user._id)}
               />
             ))
-          ) : (
-            <p>No Chat Found</p>
           )}
           {loadingChat && <Spinner m="auto" display="flex" />}
         </DrawerBody>

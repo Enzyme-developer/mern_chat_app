@@ -6,8 +6,8 @@ import { getSender, getFullSender } from "../utils/chatLogic";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import ProfileModal from "./ProfileModal";
-import UpdateGroupModal from "./UpdateGroupModal";
+import ProfileModal from "./modals/ProfileModal";
+import UpdateGroupModal from "./modals/UpdateGroupModal";
 // import ScrollableChat from "./ScrollableChat";
 // import Lottie from "react-lottie";
 import animationData from "../components/animation/typing.json";
@@ -193,9 +193,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
                 <>
                   {selectedChat.chatName.toUpperCase()}
                   <UpdateGroupModal
-                    // fetchMessages={fetchMessages}
-                    // fetchAgain={fetchAgain}
-                    // setFetchAgain={setFetchAgain}
+                  // fetchMessages={fetchMessages}
+                  // fetchAgain={fetchAgain}
+                  // setFetchAgain={setFetchAgain}
                   />
                 </>
               ))}

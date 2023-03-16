@@ -10,7 +10,7 @@ import {
   MenuDivider,
 } from "@chakra-ui/react";
 import { ChatContext, ChatState } from "../context/chatContext";
-import ProfileModal from "./ProfileModal";
+import ProfileModal from "./modals/ProfileModal";
 import { useRouter } from "next/router";
 // import NotificationBadge from "react-notification-badge";
 // import { Effect } from "react-notification-badge";
@@ -18,8 +18,8 @@ import { useRouter } from "next/router";
 type disclosureProps = {
   onOpen?: () => void;
   isOpen?: boolean;
-  onClose?: () => void
-}
+  onClose?: () => void;
+};
 
 const Nav = ({ onOpen }: disclosureProps) => {
   const router = useRouter();
