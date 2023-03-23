@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/layout";
-import "./styles.css";
+// import "./styles.css";
 import SingleChat from "./SingleChat";
 import { ChatState } from "../context/chatContext";
 
@@ -8,7 +8,7 @@ type prop = {
   setFetchAgain: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Chatbox = ({ fetchAgain, setFetchAgain }: prop) => {
+const ChatBox = ({ fetchAgain, setFetchAgain }: prop) => {
   const { selectedChat } = ChatState();
 
   return (
@@ -27,4 +27,4 @@ const Chatbox = ({ fetchAgain, setFetchAgain }: prop) => {
   );
 };
 
-export default Chatbox;
+export default ChatBox;

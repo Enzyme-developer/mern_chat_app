@@ -24,6 +24,7 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
+    setLoading(true);
     e.preventDefault();
     if (!email || !password) {
       toast({
@@ -121,8 +122,8 @@ const Login = () => {
           my="4"
           color="white"
           isLoading={loading}
-          isDisabled={loading}
-          isActive={!loading}
+          // isDisabled={loading}
+          // isActive={!loading}
           loadingText="Logging you in!"
           onClick={handleSubmit}
         >

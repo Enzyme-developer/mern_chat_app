@@ -6,27 +6,29 @@ import { useEffect, useState } from "react";
 import { getSender } from "../utils/chatLogic";
 import ChatLoading from "./reusables/ChatLoader";
 // import GroupChatModal from "./miscellaneous/GroupChatModal";
-import { Button } from "@chakra-ui/react";
+import { Avatar, Button, useDisclosure } from "@chakra-ui/react";
 import { ChatState } from "../context/chatContext";
+import GroupChatModal from "./modals/GroupChatModal";
 
 const Chats = ({ fetchAgain }: any) => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
-  console.log(chats);
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
   const fetchChats = async () => {
     try {
+      let user = JSON.parse(localStorage.getItem("userInfo") || "{}");
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user?.token}`,
         },
       };
       const { data } = await axios.get(
         "http://localhost:5000/api/chat",
         config
       );
+      console.log(data);
       setChats(data);
     } catch (error) {
       console.log(error);
@@ -44,7 +46,7 @@ const Chats = ({ fetchAgain }: any) => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo") || "{}"));
     fetchChats();
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -54,31 +56,30 @@ const Chats = ({ fetchAgain }: any) => {
       alignItems="center"
       p={3}
       bg="white"
-      w={{ base: "100%", md: "33%" }}
+      w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
     >
       <Box
         pb={3}
         px={3}
-        fontSize={{ base: "18px", md: "20px" }}
-    
+        fontSize={{ base: "18px", md: "18px" }}
         display="flex"
         w="100%"
         justifyContent="space-between"
         alignItems="center"
       >
         My Chats
-        {/* <GroupChatModal> */}
-        <Button
-          display="flex"
-          fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-          rightIcon={<AddIcon />}
-          onClick={fetchChats}
-        >
-          New Group Chat
-        </Button>
-        {/* </GroupChatModal> */}
+        <GroupChatModal>
+          <Button
+            display="flex"
+            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            rightIcon={<AddIcon />}
+            onClick={onOpen}
+          >
+            New Group Chat
+          </Button>
+        </GroupChatModal>
       </Box>
       <Box
         display="flex"
@@ -96,13 +97,19 @@ const Chats = ({ fetchAgain }: any) => {
               <Box
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
-                bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
+                bg={selectedChat === chat ? "blue.500" : "#E8E8E8"}
                 color={selectedChat === chat ? "white" : "black"}
                 px={3}
                 py={2}
                 borderRadius="lg"
                 key={chat._id}
               >
+                <Avatar
+                  size="xs"
+                  cursor="pointer"
+                  name={chat?.users[1]?.name}
+                  src={chat?.users[1]?.picture}
+                />
                 <Text>
                   {!chat.isGroupChat
                     ? getSender(loggedUser, chat.users)

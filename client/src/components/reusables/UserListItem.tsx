@@ -1,7 +1,5 @@
 import { Avatar } from "@chakra-ui/avatar";
 import { Box, Text } from "@chakra-ui/layout";
-import { useContext } from "react";
-import { ChatContext } from "../../context/chatContext";
 
 const UserListItem = ({ handleFunction, user }: any) => {
 
@@ -11,7 +9,7 @@ const UserListItem = ({ handleFunction, user }: any) => {
       cursor="pointer"
       bg="#E8E8E8"
       _hover={{
-        background: "#38B2AC",
+        background: "blue.500",
         color: "white",
       }}
       w="100%"
@@ -28,7 +26,7 @@ const UserListItem = ({ handleFunction, user }: any) => {
         size="sm"
         cursor="pointer"
         name={user.name}
-        src={user.pic}
+        src={user.picture}
       />
       <Box>
         <Text>{user.name}</Text>

@@ -3,13 +3,7 @@ const User = require("../models/userModel.ts");
 
 export const protect = async (
   req: { headers: { authorization: string }; user: any },
-  res: {
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      json: { (arg0: { message: string }): void; new (): any };
-    };
-  },
+  res: { status: (arg0: number) => void },
   next: () => void
 ) => {
   let token;
@@ -29,13 +23,11 @@ export const protect = async (
       next();
     } catch (error) {
       console.log(error);
-      res.status(401).json({ message: "Not authorized, token failed" });
-      throw new Error("Not authorized, token failed");
     }
   }
 
   if (!token) {
-    res.status(401).json({ message: "Not authorized, no token" });
+    res.status(401);
     throw new Error("Not authorized, no token");
   }
 };
