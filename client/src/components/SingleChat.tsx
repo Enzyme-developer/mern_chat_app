@@ -179,7 +179,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
               display={{ base: "flex", md: "none" }}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
-              aria-label=""
+              aria-label="back icon"
             />
             {messages &&
               (!selectedChat.isGroupChat ? (
@@ -193,9 +193,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
                 <>
                   {selectedChat.chatName.toUpperCase()}
                   <UpdateGroupModal
-                  // fetchMessages={fetchMessages}
-                  // fetchAgain={fetchAgain}
-                  // setFetchAgain={setFetchAgain}
+                    fetchMessages={''}
+                    fetchAgain={fetchAgain}
+                    setFetchAgain={setFetchAgain}
                   />
                 </>
               ))}
@@ -262,7 +262,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
           justifyContent="center"
           h="100%"
         >
-          <Text fontSize="3xl" pb={3} fontFamily="Work sans">
+          <Text fontSize="3xl" pb={3}>
             Click on a user to start chatting
           </Text>
         </Box>
