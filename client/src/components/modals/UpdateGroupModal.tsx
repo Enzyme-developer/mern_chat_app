@@ -44,8 +44,8 @@ const UpdateGroupModal = ({
   const toast = useToast();
 
   const { selectedChat, setSelectedChat, user } = ChatState();
-  console.log(selectedChat);
-  console.log(user);
+  // console.log(selectedChat);
+  // console.log(user);
 
   const handleSearch = async (query: string) => {
     setSearch(query);
@@ -222,9 +222,10 @@ const UpdateGroupModal = ({
 
       newuser._id === user.id ? setSelectedChat() : setSelectedChat(data);
       setFetchAgain(!fetchAgain);
-      fetchMessages();
+      // fetchMessages();
       setLoading(false);
     } catch (error: any) {
+      console.log(error)
       toast({
         title: "Error Occured!",
         description: error?.response?.data?.message,

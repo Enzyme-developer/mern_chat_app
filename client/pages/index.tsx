@@ -13,9 +13,9 @@ export default function Home() {
   return (
     <div
       style={{
-        backgroundImage: `url(${background.src})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        // backgroundImage: `url(${background.src})`,
+        // backgroundRepeat: "no-repeat",
+        // backgroundSize: "cover",
         minHeight: "100vh",
         width: "100vw",
         padding: "20px 0",
@@ -30,7 +30,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Container>
+      <Container className='shadow'>
         <Header />
         <AuthTabs />
       </Container>

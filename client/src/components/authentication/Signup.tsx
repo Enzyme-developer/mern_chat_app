@@ -216,17 +216,18 @@ const Signup = () => {
         />
       </FormControl>
 
-      <Box>
+      {/* <Box>
         {picturePreview && (
           <Image alt="preview" src={picturePreview} width="300" height="300" />
         )}
-      </Box>
+      </Box> */}
       <Box>
         <Button
-          colorScheme="blue"
+          colorScheme="purple"
           w="100%"
           my="4"
           color="white"
+          bg="#7e07e0"
           onClick={handleSignup}
           isLoading={loading}
           isDisabled={loading}

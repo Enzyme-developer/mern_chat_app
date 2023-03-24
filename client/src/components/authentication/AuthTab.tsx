@@ -7,7 +7,7 @@ const AuthTab = () => {
   return (
     <Tabs
       variant="solid-rounded"
-      colorScheme="blue"
+      colorScheme="purple"
       bg="white"
       p="4"
       borderRadius="10"

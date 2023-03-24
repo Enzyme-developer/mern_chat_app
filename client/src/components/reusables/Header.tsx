@@ -12,7 +12,7 @@ const Header = () => {
       my="4"
       borderRadius="10"
     >
-      <Text color="blue.500" fontSize="3xl" fontWeight="bold">
+      <Text color="#7e07e0" fontSize="3xl" fontWeight="bold">
         Wee-Chat
       </Text>
     </Box>

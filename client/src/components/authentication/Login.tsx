@@ -94,6 +94,7 @@ const Login = () => {
             placeholder="Input your email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            variant='outline'
           />
         </FormControl>
       </Box>
@@ -106,6 +107,7 @@ const Login = () => {
               placeholder="Enter password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              variant='outline'
             />
             <InputRightElement width="4.5rem">
               <Button h="100%" bg="gray.200" onClick={() => setShow(!show)}>
@@ -117,13 +119,13 @@ const Login = () => {
       </Box>
       <Box>
         <Button
-          colorScheme="blue"
+          colorScheme="purple"
           w="100%"
           my="4"
           color="white"
           isLoading={loading}
-          // isDisabled={loading}
-          // isActive={!loading}
+          isDisabled={loading}
+          isActive={!loading}
           loadingText="Logging you in!"
           onClick={handleSubmit}
         >
@@ -132,7 +134,7 @@ const Login = () => {
       </Box>
       <Box>
         <Button
-          bg="red.500"
+          bg="#7e07e0"
           w="100%"
           mb="4"
           color="white"
