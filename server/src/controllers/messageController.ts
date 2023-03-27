@@ -19,7 +19,7 @@ export const sendMessage = async (
 
   let message = {
     sender: req.user._id,
-    message: content,
+    content: content,
     chat: chatId,
   };
 
@@ -27,11 +27,15 @@ export const sendMessage = async (
     let newMessage = await Message.create(message);
     newMessage = await newMessage.populate("sender", "name picture");
     newMessage = await newMessage.populate("chat");
-    newMessage = await User.populate({
-      newMessage,
-      path: "chat.users",
-      select: "name picture",
-    });
+    // newMessage = await User.populate({
+    //   newMessage,
+    //   path: "users",
+    //   select: "name picture",
+    // });
+    newMessage = await newMessage.populate({
+      path: "chat.users", // specify the field that contains the reference to the User model
+      select: "name picture", // specify the fields to include from the User model
+    })
 
     await Chat.findByIdAndUpdate(req.body.chatId, {
       latestMessage: newMessage,
