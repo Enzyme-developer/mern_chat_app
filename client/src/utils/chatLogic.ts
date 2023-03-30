@@ -26,7 +26,6 @@ export const isSameUser = (messages: any, m: any, i: number, userId: string) => 
 export const isLastMessage = (messages: any, i:number, userId: string) => {
   return (
     i === messages.length - 1 && //if its is the last message
-    messages[messages.length - 1].sender._id &&  //if last message has a sender
     messages[messages.length - 1].sender._id !== userId  //if last message sender is not the user
 
   );
@@ -35,8 +34,7 @@ export const isLastMessage = (messages: any, i:number, userId: string) => {
 export const isSameSender = (messages: any, m: any, i: number, userId: string) => {
   return (
     i < messages.length - 1 && 
-    (messages[i + 1].sender._id !== m.sender._id ||
-      messages[i + 1].sender._id === undefined) &&
+    messages[i + 1].sender._id !== m.sender._id &&
     messages[i].sender._id !== userId
   );
 };
