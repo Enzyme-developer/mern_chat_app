@@ -14,20 +14,31 @@ const Chat = ({ chat, selectedChat, setSelectedChat, loggedUser }: any) => {
       borderRadius="lg"
       key={chat._id}
     >
-      <Avatar
-        size="xs"
-        cursor="pointer"
-        name={chat?.users[1]?.name}
-        src={chat?.users[1]?.picture}
-      />
-      <Text>
-        {!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}
-      </Text>
+      <Box display="flex" py={2}>
+        <Avatar
+          size="xs"
+          cursor="pointer"
+          name={chat?.users[1]?.name}
+          src={chat?.users[1]?.picture}
+          marginRight="3"
+        />
+        <Text fontWeight='600'>
+          {!chat.isGroupChat
+            ? getSender(loggedUser, chat.users)
+            : chat.chatName}
+        </Text>
+      </Box>
+
       {chat.latestMessage && (
         <Text fontSize="xs">
-          <b>{chat.latestMessage.sender.name} : </b>
+          <b>
+            {chat.latestMessage.sender.name == loggedUser.name
+              ? "You" 
+              : `${chat.latestMessage.sender.name}`}{" "}
+            :{" "}
+          </b>
           {chat.latestMessage.content.length > 50
-            ? chat.latestMessage.content.substring(0, 51) + "..."
+            ? chat.latestMessage.content.substring(0, 50) + "..."
             : chat.latestMessage.content}
         </Text>
       )}
