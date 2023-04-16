@@ -22,7 +22,7 @@ const Chat = ({ chat, selectedChat, setSelectedChat, loggedUser }: any) => {
           src={chat?.users[1]?.picture}
           marginRight="3"
         />
-        <Text fontWeight='600'>
+        <Text fontWeight="600">
           {!chat.isGroupChat
             ? getSender(loggedUser, chat.users)
             : chat.chatName}
@@ -33,7 +33,7 @@ const Chat = ({ chat, selectedChat, setSelectedChat, loggedUser }: any) => {
         <Text fontSize="xs">
           <b>
             {chat.latestMessage.sender.name == loggedUser.name
-              ? "You" 
+              ? "You"
               : `${chat.latestMessage.sender.name}`}{" "}
             :{" "}
           </b>

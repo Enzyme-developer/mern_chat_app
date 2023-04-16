@@ -56,7 +56,14 @@ export const fetchAllMessages = async (
   try {
     const messages = await Message.find({ chat: req.params.chatId })
       .populate("sender", "name picture email")
-      .populate("chat");
+      .populate({
+        path: "chat",
+        populate: {
+            path: "users",
+            model: "User",
+            select: "name picture email"
+        }
+    });
     res.json(messages);
   } catch (error) {
     console.log(error);
