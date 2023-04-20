@@ -32,7 +32,7 @@ const Chat = ({ chat, selectedChat, setSelectedChat, loggedUser }: any) => {
       {chat.latestMessage && (
         <Text fontSize="xs">
           <b>
-            {chat.latestMessage.sender.name == loggedUser.name
+            {chat.latestMessage.sender.name == loggedUser?.name
               ? "You"
               : `${chat.latestMessage.sender.name}`}{" "}
             :{" "}

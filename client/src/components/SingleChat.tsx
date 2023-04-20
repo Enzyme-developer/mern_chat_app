@@ -55,9 +55,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
       setLoading(true);
-
       const { data } = await axios.get(
         `http://localhost:5000/api/message/${selectedChat._id}`,
         config
@@ -96,10 +94,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
           },
           config
         );
+        console.log(data)
         socket.emit("sendMessage", data);
         setMessages([...messages, data]);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         toast({
           title: "Error Occured!",
           description: "Failed to send the Message",
@@ -144,22 +143,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
   const typingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(e.target.value);
 
-    // if (!socketConnected) return;
+    if (!socketConnected) return;
 
-    // if (!typing) {
-    //   setTyping(true);
-    //   socket.emit("typing", selectedChat._id);
-    // }
-    // let lastTypingTime = new Date().getTime();
-    // var timerLength = 3000;
-    // setTimeout(() => {
-    //   var timeNow = new Date().getTime();
-    //   var timeDiff = timeNow - lastTypingTime;
-    //   if (timeDiff >= timerLength && typing) {
-    //     socket.emit("stop typing", selectedChat._id);
-    //     setTyping(false);
-    //   }
-    // }, timerLength);
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+    let lastTypingTime = new Date().getTime();
+    let timerLength = 5000;
+    setTimeout(() => {
+      let timeNow = new Date().getTime();
+      let timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (

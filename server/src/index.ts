@@ -38,9 +38,7 @@ const io = require("socket.io")(server, {
   pingTimeout: 5000,
   cors: {
     origin: [
-      "http://localhost:3000",
-      "http://localhost:3000/chat",
-      "http://localhost:3000",
+      "http://localhost:3000"
     ],
   },
 });
@@ -56,20 +54,21 @@ io.on("connection", (socket: any) => {
 
   socket.on("joinChat", (chat: { _id: string }) => {
     socket.join(chat._id);
-    console.log("user joined room " + chat._id);
   });
+
 
   socket.on("typing", (chat: any) => socket.in(chat).emit("typing"));
   socket.on("stop typing", (chat: any) => socket.in(chat).emit("stop typing"));
 
+
   socket.on("sendMessage", (newMessageReceived: any) => {
-    if (!newMessageReceived.chat.users)
+    if (!newMessageReceived.chat.users) {
       return console.log("chat.users is not defined");
+    }
 
     newMessageReceived.chat.users.forEach((user: { _id: String }) => {
-      if (user._id == newMessageReceived.sender._id) return;
+      // if (user._id == newMessageReceived.sender._id) return;
       socket.in(user._id).emit("messageReceived", newMessageReceived);
-      console.log("sent");
     });
   });
 
