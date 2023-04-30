@@ -12,8 +12,9 @@ import {
 import { ChatContext, ChatState } from "../context/chatContext";
 import ProfileModal from "./modals/ProfileModal";
 import { useRouter } from "next/router";
-// import NotificationBadge from "react-notification-badge";
-// import { Effect } from "react-notification-badge";
+import { getSender } from "../utils/chatLogic";
+// @ts-ignore
+import NotificationBadge, { Effect } from "react-notification-badge";
 
 type disclosureProps = {
   onOpen?: () => void;
@@ -23,7 +24,14 @@ type disclosureProps = {
 
 const Nav = ({ onOpen }: disclosureProps) => {
   const router = useRouter();
-  const { user } = useContext(ChatContext);
+  const {
+    setSelectedChat,
+    user,
+    notification,
+    setNotification,
+    chats,
+    setChats,
+  } = useContext(ChatContext);
 
   const logoutHandler = () => {
     localStorage.removeItem("uesrInfo");
@@ -60,8 +68,36 @@ const Nav = ({ onOpen }: disclosureProps) => {
       <div>
         <Menu>
           <MenuButton>
-            <BellIcon fontSize="2xl" m="1" />
+            <div style={{position: 'relative'}}>
+              <BellIcon fontSize="2xl" m="1" />
+              <div style={{ position: 'relative' }}>
+            <NotificationBadge
+              count={notification.length}
+              effect={Effect.SCALE}
+                />
+              </div>
+            </div>
           </MenuButton>
+          <MenuList px={2}>
+            {/* <NotificationBadge
+              count={notification.length}
+              effect={Effect.SCALE}
+            /> */}
+            {!notification.length && "No New Messages"}
+            {notification.map((notif: any) => (
+              <MenuItem
+                key={notif._id}
+                onClick={() => {
+                  setSelectedChat(notif.chat);
+                  setNotification(notification.filter((n: any) => n !== notif));
+                }}
+              >
+                {notif.chat.isGroupChat
+                  ? `New Message in ${notif.chat.chatName}`
+                  : `New Message from ${getSender(user, notif.chat.users)}`}
+              </MenuItem>
+            ))}
+          </MenuList>
         </Menu>
         <Menu>
           {({ isOpen }) => (

@@ -8,6 +8,8 @@ type ChatContextType = {
   setSelectedChat: any;
   chats: any;
   setChats: any;
+  notification: any;
+  setNotification: any;
 };
 
 export const ChatContext = createContext<ChatContextType>(
@@ -18,7 +20,7 @@ const ChatProvider = ({ children }: any) => {
   const router = useRouter();
   const [user, setUser] = useState({});
   const [selectedChat, setSelectedChat] = useState();
-  // const [notification, setNotification] = useState<any>([]);
+  const [notification, setNotification] = useState<any>([]);
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
@@ -38,8 +40,8 @@ const ChatProvider = ({ children }: any) => {
         setSelectedChat,
         user,
         setUser,
-        // notification,
-        // setNotification,
+        notification,
+        setNotification,
         chats,
         setChats,
       }}

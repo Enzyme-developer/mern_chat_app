@@ -10,7 +10,7 @@ import io, { Socket } from "socket.io-client";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import ProfileModal from "./modals/ProfileModal";
 import UpdateGroupModal from "./modals/UpdateGroupModal";
-// import Lottie from "react-lottie";
+import Lottie from "react-lottie";
 import animationData from "../components/animation/typing.json";
 import { ChatState } from "../context/chatContext";
 import ScrollableChat from "./ScrollableChat";
@@ -75,9 +75,30 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
     }
   };
 
+  const typingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+
+    if (!socketConnected) alert("Not connected");
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+    let lastTypingTime = new Date().getTime();
+    let timerLength = 5000;
+    setTimeout(() => {
+      let timeNow = new Date().getTime();
+      let timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
+  };
+
   const sendMessage = async (e: any) => {
     if (e.key === "Enter" && newMessage) {
-      // socket.emit("stop typing", selectedChat._id);
+      socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
           headers: {
@@ -94,7 +115,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
           },
           config
         );
-        console.log(data)
+        console.log(data);
         socket.emit("sendMessage", data);
         setMessages([...messages, data]);
       } catch (error) {
@@ -126,40 +147,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
 
   useEffect(() => {
     socket.on("messageReceived", (newMessageReceived) => {
-      if (
-        !compareSelectedChat ||
-        compareSelectedChat._id !== newMessageReceived.chat._id
-      ) {
-        if (!notification.includes(newMessageReceived)) {
-          setNotification([newMessageReceived, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessageReceived]);
+      setMessages([...messages, newMessageReceived]);
+      if (compareSelectedChat._id !== newMessageReceived.chat._id) {
+        setNotification([newMessageReceived, ...notification]);
+        setFetchAgain(!fetchAgain);
       }
+
     });
   });
-
-  const typingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
-
-    if (!socketConnected) return;
-
-    if (!typing) {
-      setTyping(true);
-      socket.emit("typing", selectedChat._id);
-    }
-    let lastTypingTime = new Date().getTime();
-    let timerLength = 5000;
-    setTimeout(() => {
-      let timeNow = new Date().getTime();
-      let timeDiff = timeNow - lastTypingTime;
-      if (timeDiff >= timerLength && typing) {
-        socket.emit("stop typing", selectedChat._id);
-        setTyping(false);
-      }
-    }, timerLength);
-  };
 
   return (
     <>
@@ -232,12 +227,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: prop) => {
             >
               {istyping ? (
                 <div>
-                  {/* <Lottie
+                  <Lottie
                     options={defaultOptions}
-                    // height={50}
+                    height={50}
                     width={70}
                     style={{ marginBottom: 15, marginLeft: 0 }}
-                  /> */}
+                  />
                 </div>
               ) : (
                 <></>
