@@ -1,37 +1,54 @@
-import { Socket } from "dgram";
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { Server } from "http";
+import connectDb from "./config/connectDb";
+import userRoutes from "./routes/userRoutes";
+import chatRoutes from "./routes/chatRoutes";
+import messageRoutes from "./routes/messageRoutes";
+import errorHandler from "./middleware/errorHandler";
+import notFound from "./middleware/notFound";
 
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv").config();
-const connectDb = require("./config/connectDb");
-const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes");
-const messageRoutes = require("./routes/messageRoutes");
-const errorHandler = require("./middleware/errorHandler");
-const notFound = require("./middleware/notFound");
+dotenv.config();
 
-const port = process.env.port;
+const port = process.env.PORT || 5000;
 const ENDPOINT = "localhost";
-const app = express();
+const app: Application = express();
+const server: Server = new Server(app);
+
 connectDb();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extented: true }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+
 app.use(notFound);
 app.use(errorHandler);
 
-app.get("/", (req: any, res: { send: (arg0: string) => void }) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("Hello world");
 });
 
-const server = app.listen(port, () => {
-  console.log(`server is listening on port ${port}`);
+server.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //connect socket to server
 const io = require("socket.io")(server, {

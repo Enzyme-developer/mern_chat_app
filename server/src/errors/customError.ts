@@ -1,8 +1,8 @@
-class customError extends Error {
+class CustomError extends Error {
   constructor(message: string) {
-    super(message)
+    super(message);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
-export {};
-module.exports = customError
+export default CustomError;

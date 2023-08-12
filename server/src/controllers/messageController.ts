@@ -1,74 +1,60 @@
-const Message = require("../models/messageModel");
-const User = require("../models/userModel");
-const Chat = require("../models/chatModel");
-const express = require("express");
+import { Request, Response } from "express";
+import Message from "../models/messageModel";
+import Chat from "../models/chatModel";
+import BadRequest from "../errors/badRequest";
 
-//@description     Create New Message
-//@route           POST /api/Message/
-//@access          Protected
 export const sendMessage = async (
-  req: { body: { chatId: string; content?: string }; user: { _id: string } },
-  res: { sendStatus: (arg0: number) => any; json: (arg0: any) => void }
+  req: any,
+  res: Response
 ) => {
   const { content, chatId } = req.body;
 
   if (!content || !chatId) {
-    console.log("Invalid data passed into request");
-    return res.sendStatus(400);
+    res.status(400).json({ message: "Invalid data passed into request" });
+    throw new BadRequest("Invalid data passed into request");
   }
 
-  let message = {
+  const newMessageData = {
     sender: req.user._id,
-    content: content,
+    content,
     chat: chatId,
   };
 
   try {
-    let newMessage = await Message.create(message);
-    newMessage = await newMessage.populate("sender", "name picture");
-    newMessage = await newMessage.populate("chat");
-    // newMessage = await User.populate({
-    //   newMessage,
-    //   path: "users",
-    //   select: "name picture",
-    // });
+    let newMessage = await Message.create(newMessageData);
     newMessage = await newMessage.populate({
-      path: "chat.users", // specify the field that contains the reference to the User model
-      select: "name picture", // specify the fields to include from the User model
-    })
+      path: "chat.users",
+      select: "name picture",
+    });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, {
+    await Chat.findByIdAndUpdate(chatId, {
       latestMessage: newMessage,
     });
+
     res.json(newMessage);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.sendStatus(500);
   }
 };
 
-//@description     Get all Messages
-//@route           GET /api/Message/:chatId
-//@access          Protected
-export const fetchAllMessages = async (
-  req: { params: { chatId: string } },
-  res: { json: (arg0: any) => void; status: (arg0: number) => void }
-) => {
+export const fetchAllMessages = async (req: Request, res: Response) => {
   try {
-    const messages = await Message.find({ chat: req.params.chatId })
+    const chatId = req.params.chatId;
+    const messages = await Message.find({ chat: chatId })
       .populate("sender", "name picture email")
       .populate({
         path: "chat",
         populate: {
-            path: "users",
-            model: "User",
-            select: "name picture email"
-        }
-    });
-    res.json(messages);
+          path: "users",
+          model: "User",
+          select: "name picture email",
+        },
+      });
+
+    res.status(200).json({ mesage: "message fetched successfully", messages });
   } catch (error) {
-    console.log(error);
-    res.status(400);
+    console.error(error);
+    res.sendStatus(500);
   }
 };
-
-module.exports = { fetchAllMessages, sendMessage };

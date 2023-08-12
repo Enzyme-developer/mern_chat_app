@@ -1,13 +1,20 @@
-const mongoose = require("mongoose");
+import mongoose, { Document, Schema, Types } from "mongoose";
 
-const messageModel = mongoose.Schema(
+interface MessageModel extends Document {
+  sender: Types.ObjectId;
+  content: string;
+  chat: Types.ObjectId;
+}
+
+const messageSchema = new Schema<MessageModel>(
   {
-    sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    sender: { type: Schema.Types.ObjectId, ref: "User" },
     content: { type: String, trim: true },
-    chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" },
+    chat: { type: Schema.Types.ObjectId, ref: "Chat" },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
-export {};
-module.exports = mongoose.model("Message", messageModel);
+const Message = mongoose.model<MessageModel>("Message", messageSchema);
+
+export default Message;

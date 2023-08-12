@@ -1,38 +1,15 @@
+import { Request, Response } from "express";
+import User from "../models/userModel";
+import badRequest from "../errors/badRequest";
+import unauthorized from "../errors/unauthorized";
+import generateToken from "../utils/generateToken";
 const bcrypt = require("bcryptjs");
-const User = require("../models/userModel");
-const badRequest = require("../errors/badRequest");
-const unauthorized = require("../errors/unauthorized");
-const generateToken = require("../config/generateToken");
 
-//register
-export const registerUser = async (
-  req: {
-    body: { name: string; email: string; password: string; picture: string };
-  },
-  res: {
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: {
-        (arg0: {
-          id: string;
-          name: string;
-          email: string;
-          password: string;
-          picture: string;
-          token: string;
-        }): void;
-        new (): any;
-      };
-      json: { (arg0: { message: string }): void; new (): any };
-    };
-  }
-) => {
+export const registerUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password, picture } = req.body;
 
     if (!name || !email || !password) {
-      res.status(400);
       throw new badRequest("Please provide the required credentials");
     }
 
@@ -50,76 +27,56 @@ export const registerUser = async (
       });
 
       if (user) {
-        res.status(201).send({
+        res.status(201).json({
           id: user._id,
           name: user.name,
           email: user.email,
-          password: user.password,
           picture: user.picture,
           token: await generateToken(user._id),
         });
-        console.log(user);
       } else {
-        res.status(400).json({ message: "something went wrong" });
-        throw new badRequest("something went wrong");
+        throw new badRequest("Something went wrong");
       }
     } else {
-      throw new unauthorized("user already exists");
+      throw new unauthorized("User already exists");
     }
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.statusCode || 500).json({ message: error.message });
   }
 };
 
-
-//login
-export const loginUser = async (
-  req: { body: { email: string; password: string } },
-  res: {
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: {
-        (arg0: {
-          id: string;
-          name: string;
-          email: string;
-          picture: string;
-          token: string;
-        }): void;
-        new (): any;
-      };
-      json: { (arg0: { message: string }): any; new (): any };
-    };
-  }
-) => {
+export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (user) {
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      passwordMatch
-        ? res.status(201).send({
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            picture: user.picture,
-            token: await generateToken(user._id),
-          })
-        : res.status(401).json({ message: "wrong credentials" });
-    } else {
+    if (!user) {
       throw new unauthorized("User not found");
     }
-  } catch (error) {
-    console.log(error);
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      res.status(401).json({ message: "Wrong credentials" });
+      throw new badRequest("Wrong credentials");
+    }
+
+    res.status(201).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      token: await generateToken(user._id),
+    });
+    
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.statusCode || 500).json({ message: error.message });
   }
 };
 
-
-//api/user?search=enzyme
 export const getAllUsers = async (
-  req: { query: string; user: { _id: string } },
-  res: { send: (arg0: any) => void }
+  req: any,
+  res: Response
 ) => {
   const keyword = req.query.search
     ? {
@@ -129,8 +86,11 @@ export const getAllUsers = async (
         ],
       }
     : {};
-  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
-  res.send(users);
+  try {
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    res.json(users);
+  } catch (error: any) {
+    console.error(error);
+    res.status(error.statusCode || 500).json({ message: error.message });
+  }
 };
-
-module.exports = { registerUser, loginUser, getAllUsers };
